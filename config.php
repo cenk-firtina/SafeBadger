@@ -50,15 +50,15 @@ if (session_status() === PHP_SESSION_NONE) {
 }
 
 // İki Aşamalı Doğrulama (2FA) ve E-posta Ayarları
-define('AUTH_EMAIL', 'cenkfirtna@gmail.com');
+define('AUTH_EMAIL', 'your-email@example.com');
 define('APP_NAME', 'SafeBadger');
 
-// Özel SMTP Yapılandırması (pw@cenkfirtina.com)
+// Özel SMTP Yapılandırması (noreply@example.com)
 define('SMTP_HOST', 'localhost');       // cPanel Exim daima localhost'ta çalışır
 define('SMTP_PORT', 587);              // cPanel Exim submission portu
-define('SMTP_USER', 'pw@cenkfirtina.com');
+define('SMTP_USER', 'noreply@example.com');
 define('SMTP_PASS', 'YOUR_SMTP_PASSWORD');   // TODO: cPanel e-posta hesabınızın parolasını buraya yazın
-define('SMTP_FROM', 'pw@cenkfirtina.com');
+define('SMTP_FROM', 'noreply@example.com');
 define('SMTP_FROM_NAME', 'SafeBadger Güvenlik');
 
 /**
@@ -74,7 +74,7 @@ function mail_debug_log(string $msg): void {
  * Strateji sırası:
  *   1) PHP mail() — cPanel'de Exim ile doğrudan çalışır (en güvenilir)
  *   2) localhost SMTP soket — port 587, 465, 25 sırasıyla dener
- *   3) Uzak SMTP — cenkfirtina.com:465 (Cloudflare engellemezse)
+ *   3) Uzak SMTP — example.com:465 (Cloudflare engellemezse)
  */
 function send_safebadger_mail(string $toEmail, string $subject, string $htmlBody): bool {
     $from = SMTP_FROM;
@@ -125,10 +125,10 @@ function send_safebadger_mail(string $toEmail, string $subject, string $htmlBody
         }
     }
 
-    // ─── STRATEJİ 3: Uzak SMTP (cenkfirtina.com) ───
+    // ─── STRATEJİ 3: Uzak SMTP (example.com) ───
     $remotePorts = [
-        ['host' => 'ssl://cenkfirtina.com', 'port' => 465, 'ssl' => true],
-        ['host' => 'cenkfirtina.com',       'port' => 587, 'ssl' => false],
+        ['host' => 'ssl://example.com', 'port' => 465, 'ssl' => true],
+        ['host' => 'example.com',       'port' => 587, 'ssl' => false],
     ];
 
     foreach ($remotePorts as $srv) {
@@ -232,7 +232,7 @@ function smtp_send_raw(string $host, int $port, string $toEmail, string $subject
                       "MIME-Version: 1.0\r\n" .
                       "Content-Type: text/html; charset=UTF-8\r\n" .
                       "Date: " . date('r') . "\r\n" .
-                      "Message-ID: <" . uniqid('cp_', true) . "@cenkfirtina.com>\r\n" .
+                      "Message-ID: <" . uniqid('cp_', true) . "@example.com>\r\n" .
                       "X-Mailer: SafeBadger SMTP Engine\r\n";
 
         fputs($socket, $msgHeaders . "\r\n" . $htmlBody . "\r\n.\r\n");
@@ -280,7 +280,7 @@ function send_otp_email(string $toEmail, string $otpCode): bool {
         <h2 style='margin: 0 0 10px 0; font-size: 20px;'>Giriş Doğrulama Kodu</h2>
         <p class='desc'>SafeBadger giriş doğrulama kodunuz: <strong>{$otpCode}</strong></p>
         <div class='code'>{$otpCode}</div>
-        <p class='desc'>Bu kod <strong>10 dakika</strong> boyunca geçerlidir. Gönderici: pw@cenkfirtina.com</p>
+        <p class='desc'>Bu kod <strong>10 dakika</strong> boyunca geçerlidir. Gönderici: noreply@example.com</p>
         <div class='footer'>SafeBadger — Uçtan Uca Şifreli Kişisel Güvenlik Kasası</div>
       </div>
     </body>
@@ -324,7 +324,7 @@ function send_reset_email(string $toEmail, string $resetUrl, string $token): boo
         <a href='{$resetUrl}' class='btn' target='_blank'>Ana Parolamı Güncelle</a>
         <p class='desc' style='font-size: 12px; margin-bottom: 8px;'>Buton çalışmıyorsa aşağıdaki bağlantıyı tarayıcınıza kopyalayabilirsiniz:</p>
         <div class='url-box'>{$resetUrl}</div>
-        <div class='footer'>Gönderici: pw@cenkfirtina.com | SafeBadger sıfır bilgi mimarisiyle korunmaktadır.</div>
+        <div class='footer'>Gönderici: noreply@example.com | SafeBadger sıfır bilgi mimarisiyle korunmaktadır.</div>
       </div>
     </body>
     </html>

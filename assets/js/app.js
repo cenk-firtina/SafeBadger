@@ -335,7 +335,7 @@
           state.tempPassword = password; // Kod onaylandığında masterKey türetmek için RAM'de geçici tut
           dom.authForm.style.display = 'none';
           dom.otpForm.style.display = 'block';
-          if (dom.otpEmailTarget) dom.otpEmailTarget.textContent = data.email || 'cenkfirtna@gmail.com';
+          if (dom.otpEmailTarget) dom.otpEmailTarget.textContent = data.email || 'your-email@example.com';
           dom.otpCodeInput.value = data.local_code || '';
           dom.otpCodeInput.focus();
         } else if (data.success) {
@@ -963,7 +963,7 @@
         showToast('Şifre değiştirme bağlantısı ' + (data.email || '') + ' adresinize gönderildi! Lütfen gelen kutunuzu kontrol edin.', 'success');
         if (data.reset_url) {
           console.log('[SafeBadger Reset Link]:', data.reset_url);
-          if (confirm('Şifre değiştirme bağlantısı cenkfirtna@gmail.com adresinize gönderildi!\n\nYerel test için hemen şifre yenileme ekranını açmak ister misiniz?')) {
+          if (confirm('Şifre değiştirme bağlantısı your-email@example.com adresinize gönderildi!\n\nYerel test için hemen şifre yenileme ekranını açmak ister misiniz?')) {
             window.location.href = data.reset_url;
           }
         }

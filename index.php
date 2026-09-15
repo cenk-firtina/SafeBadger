@@ -81,7 +81,7 @@ require_once __DIR__ . '/config.php';
             <span>E-Posta Doğrulaması</span>
           </div>
           <div style="font-size: 0.8rem; color: var(--text-secondary); line-height: 1.4;">
-            <strong id="otpEmailTarget" style="color: var(--text-primary);">cenkfirtna@gmail.com</strong> adresine 6 haneli güvenlik kodu gönderildi.
+            <strong id="otpEmailTarget" style="color: var(--text-primary);">your-email@example.com</strong> adresine 6 haneli güvenlik kodu gönderildi.
           </div>
         </div>
 
@@ -421,7 +421,7 @@ require_once __DIR__ . '/config.php';
         <!-- Ana Parola & Şifre Değiştir -->
         <div class="settings-card">
           <h4 style="font-size: 0.95rem; margin-bottom: 6px; color: var(--text-primary);">Ana Parola & Şifre Değiştir</h4>
-          <p style="font-size: 0.82rem; color: var(--text-muted); margin-bottom: 14px;">Şifrenizi güvenle güncellemek için kayıtlı e-posta adresinize (<strong>cenkfirtna@gmail.com</strong>) tek kullanımlık güvenli bağlantı gönderilir.</p>
+          <p style="font-size: 0.82rem; color: var(--text-muted); margin-bottom: 14px;">Şifrenizi güvenle güncellemek için kayıtlı e-posta adresinize (<strong>your-email@example.com</strong>) tek kullanımlık güvenli bağlantı gönderilir.</p>
           <button type="button" id="btnSettingsRequestReset" class="btn-secondary" style="width: 100%;">
             <svg style="width: 16px; height: 16px;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
             <span>Mailime Şifre Değiştirme Linki Gönder</span>

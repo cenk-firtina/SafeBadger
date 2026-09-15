@@ -370,7 +370,7 @@ if ($action === 'test_mail') {
         ['label' => "IP:587($serverIP)", 'host' => $serverIP, 'port' => 587],
         ['label' => "IP:25($serverIP)", 'host' => $serverIP, 'port' => 25],
         ['label' => "ssl://IP:465", 'host' => "ssl://$serverIP", 'port' => 465],
-        ['label' => 'ssl://domain:465', 'host' => 'ssl://cenkfirtina.com', 'port' => 465],
+        ['label' => 'ssl://domain:465', 'host' => 'ssl://example.com', 'port' => 465],
     ];
     foreach ($smtpTests as $t) {
         $lg = [];
@@ -393,7 +393,7 @@ if ($action === 'test_mail') {
             fputs($s,"RCPT TO:<$toEmail>\r\n");$rt=$r();$lg[]="RT:$rt";if(substr($rt,0,3)!=='250'){fputs($s,"QUIT\r\n");fclose($s);$results[]=['t'=>$t['label'],'ok'=>false,'l'=>implode('|',$lg)];continue;}
             fputs($s,"DATA\r\n");$dr=$r();$lg[]="D:$dr";if(substr($dr,0,3)!=='354'){fputs($s,"QUIT\r\n");fclose($s);$results[]=['t'=>$t['label'],'ok'=>false,'l'=>implode('|',$lg)];continue;}
             $en2="=?UTF-8?B?".base64_encode('SafeBadger')."?=";
-            $hd="From:$en2 <$from>\r\nTo:$toEmail\r\nSubject:$subject\r\nMIME-Version:1.0\r\nContent-Type:text/html;charset=UTF-8\r\nDate:".date('r')."\r\nMessage-ID:<".uniqid('cp',true)."@cenkfirtina.com>\r\n";
+            $hd="From:$en2 <$from>\r\nTo:$toEmail\r\nSubject:$subject\r\nMIME-Version:1.0\r\nContent-Type:text/html;charset=UTF-8\r\nDate:".date('r')."\r\nMessage-ID:<".uniqid('cp',true)."@example.com>\r\n";
             fputs($s,$hd."\r\n".$body."\r\n.\r\n");$sr=$r();$lg[]="S:$sr";
             fputs($s,"QUIT\r\n");@fclose($s);
             $ok=(substr($sr,0,3)==='250');$results[]=['t'=>$t['label'],'ok'=>$ok,'l'=>implode('|',$lg)];
