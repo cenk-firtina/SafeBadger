@@ -1,0 +1,21 @@
+# ─── Hassas çalışma verileri (asla commit edilmez) ───
+data/vault.db
+data/*.db
+data/*.sqlite
+data/last_otp.txt
+data/last_reset_link.txt
+data/mail_debug.log
+data/*.log
+
+# ─── Yükleme paketi / build çıktısı ───
+*.zip
+
+# ─── Yüklenen profil fotoğrafları / kullanıcı içeriği ───
+uploads/
+
+# ─── OS / editör dosyaları ───
+.DS_Store
+Thumbs.db
+*.swp
+.idea/
+.vscode/

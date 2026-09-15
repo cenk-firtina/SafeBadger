@@ -1,0 +1,26 @@
+{
+  "name": "SafeBadger - Kişisel Şifre Yöneticisi",
+  "short_name": "SafeBadger",
+  "description": "cPanel ve iOS uyumlu, uçtan uca şifreli kişisel şifre kasası.",
+  "start_url": "./index.php",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#090d16",
+  "theme_color": "#090d16",
+  "categories": ["utilities", "productivity"],
+  "icons": [
+    {
+      "src": "assets/icons/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "assets/icons/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ]
+}
