@@ -1,107 +1,172 @@
-# 🛡️ SafeBadger — Kişisel Şifre Yöneticisi (cPanel & iOS PWA)
+# 🦡 SafeBadger — Personal Password Manager (cPanel & iOS PWA)
 
-> **Kendi sunucunda barındırdığın, sıfır-bilgi mimarili, uçtan uca şifreli kişisel şifre kasası.**
+> **A self-hosted, zero-knowledge, end-to-end encrypted personal password vault.**
 
-SafeBadger, cPanel hosting ortamlarında **sıfır konfigürasyonla** çalışan, **Zero-Knowledge (Sıfır Bilgi)** uçtan uca **AES-256-GCM** şifrelemeli, iOS Safari üzerinden ana ekrana eklendiğinde tam bir mobil uygulama gibi çalışan bireysel bir şifre saklama projesidir.
+SafeBadger is a personal password manager that runs on any cPanel hosting environment with **zero configuration**. It uses **zero-knowledge**, end-to-end **AES-256-GCM** encryption and behaves like a full native mobile app when added to the home screen from iOS Safari.
 
-## 📖 Proje Hakkında
+## 📖 About The Project
 
-SafeBadger; parolalarını üçüncü taraf bir buluta emanet etmek istemeyen, verisinin kontrolünü tamamen kendi elinde tutmak isteyen kullanıcılar için tasarlanmıştır. Uygulama saf **PHP + SQLite** ile yazıldığından, çalışması için ne harici bir veritabanı sunucusuna ne de karmaşık bir kuruluma ihtiyaç duyar — dosyaları cPanel'e atıp bir ana parola belirlemek yeterlidir.
+SafeBadger is built for users who don't want to hand their passwords to a third-party cloud and prefer to keep full control of their own data. Written in pure **PHP + SQLite**, it needs neither an external database server nor a complex setup — just drop the files onto your cPanel host and set a master password.
 
-Projenin temel felsefesi **"sunucu senin verini asla göremez"** ilkesidir: tüm şifreleme ve şifre çözme işlemleri tarayıcının içinde, **Web Crypto API** kullanılarak yapılır. Sunucuya yalnızca anlamsız, şifreli veri gider. Buna ek olarak **e-posta tabanlı 2FA (OTP)**, otomatik kilitlenme, şifreli yedekleme ve tam **PWA** desteği ile hem güvenli hem de günlük kullanımda pratik bir deneyim sunar.
+The core philosophy is **"the server can never see your data"**: all encryption and decryption happen inside the browser using the **Web Crypto API**. Only meaningless ciphertext ever reaches the server. On top of that, **email-based 2FA (OTP)**, auto-lock, encrypted backups and full **PWA** support make it both secure and pleasant to use every day.
 
-**Teknoloji Yığını:** PHP 7.4+ · SQLite (opsiyonel MySQL) · Vanilla JavaScript · Web Crypto API (PBKDF2 + AES-256-GCM) · PWA (Service Worker + Manifest) · Apple Glassmorphism CSS
-
----
-
-## 🌟 Öne Çıkan Özellikler
-
-- **🔒 Sıfır-Bilgi (Zero-Knowledge) İstemci Şifreleme**:
-  - Şifreler ve hesap bilgileri Web Crypto API (PBKDF2 + AES-256-GCM) ile sunucuya gitmeden önce tarayıcınızda şifrelenir.
-  - Sunucu ve veritabanı şifrelerinizi asla düz metin olarak görmez; sunucu sahibi veya hosting sağlayıcısı veritabanını açsa bile sadece anlamsız şifreli metinler görür.
-- **📧 İki Aşamalı E-Posta Doğrulama (2FA OTP)**:
-  - Giriş yapılırken parolanız doğrulandıktan sonra **cenkfirtna@gmail.com** adresinize 6 haneli tek kullanımlık güvenlik kodu gönderilir.
-  - Kod doğru girilmeden kasanın kilidi açılmaz, tam koruma sağlanır.
-- **📱 iOS PWA (Mobil Uygulama Hissi)**:
-  - iOS Safari'de "Paylaş ➔ Ana Ekrana Ekle" yaparak tam ekran, Safari çubuğu olmadan yerel bir iOS uygulaması gibi kullanın.
-  - Apple Glassmorphism tasarım, akıcı animasyonlar, iOS güvenli alan (safe-area) uyumu.
-- **🌗 Karanlık & Aydınlık Tema (Dark / Light Mode)**:
-  - Kullanıcı istediği zaman üst bardaki veya ayarlar menüsündeki tek dokunuşla Koyu Mod ile Açık Mod arasında geçiş yapabilir.
-- **👤 Kişisel Profil Fotoğrafı (Avatar)**:
-  - İstediğiniz kişi veya profil fotoğrafını yükleyebilir, dilediğiniz zaman değiştirebilir veya kaldırabilirsiniz.
-- **⚡ Hızlı Kopyalama & Güvenlik**:
-  - Kullanıcı adı ve şifreyi tek dokunuşla panoya kopyalama.
-  - Güçlü Şifre Üretici (Password Generator - uzunluk, harf, rakam, sembol ve şifre gücü ölçer).
-  - 15 dakika hareketsizlik durumunda otomatik kilitlenme.
-- **💾 Şifreli Yedekleme (Backup & Restore)**:
-  - Tüm kayıtlarınızı tek tıkla şifreli JSON dosyası olarak bilgisayarınıza veya telefonunuza indirin ve geri yükleyin.
+**Tech Stack:** PHP 7.4+ · SQLite (optional MySQL) · Vanilla JavaScript · Web Crypto API (PBKDF2 + AES-256-GCM) · PWA (Service Worker + Manifest) · Apple Glassmorphism CSS
 
 ---
 
-## 🚀 cPanel Kurulum Kılavuzu (3 Kolay Adım)
+## 🌟 Key Features
 
-Bu proje SQLite veritabanı kullandığı için cPanel'de **veritabanı oluşturmanıza veya kullanıcı yetkilendirmenize gerek yoktur.**
-
-1. **Dosyaları Yükleyin**:
-   - Bu proje klasöründeki tüm dosyaları `.zip` haline getirin.
-   - cPanel'inize giriş yapın ve **Dosya Yöneticisi (File Manager)**'ı açın.
-   - `public_html` klasörüne (veya `sifreler.alanadiniz.com` gibi oluşturduğunuz bir alt etki alanının klasörüne) girip zip dosyasını yükleyin ve **Extract (Çıkar)** deyin.
-2. **İzinleri Kontrol Edin**:
-   - `data/` klasörünün yazma izninin (`755` veya `777`) olduğundan emin olun (SQLite veritabanı bu klasörün içinde otomatik oluşur).
-   - `data/.htaccess` dosyası veritabanınızın dışarıdan indirilmesini otomatik olarak engeller.
-3. **Kasayı Başlatın**:
-   - Tarayıcınızdan sitenize gidin (ör. `https://sifreler.alanadiniz.com`).
-   - Karşınıza gelen ilk ekranda güçlü bir **Ana Parola (Master Password)** belirleyin ve kasanızı başlatın!
-
-*(İsteğe bağlı: MySQL kullanmak isterseniz `config.php` dosyasındaki `DB_TYPE` değerini `'mysql'` yapıp veritabanı bilgilerinizi yazabilirsiniz).*
-
----
-
-## 📲 iOS Cihazınızda Mobil Uygulama Olarak Kullanma
-
-1. iPhone veya iPad'inizde **Safari** tarayıcısını açın ve sitenize gidin.
-2. Ekranın en altındaki **Paylaş (Share)** simgesine (kare içinden yukarı çıkan ok) dokunun.
-3. Menüyü aşağı kaydırıp **"Ana Ekrana Ekle" (Add to Home Screen)** seçeneğini seçin.
-4. Sağ üstteki **"Ekle"** butonuna dokunun.
-5. Artık ana ekranınızda özel SafeBadger ikonuyla bağımsız bir mobil uygulama olarak çalışacaktır!
+- **🔒 Zero-Knowledge Client-Side Encryption**
+  - Passwords and account details are encrypted in your browser (PBKDF2 + AES-256-GCM) **before** they ever leave the device.
+  - The server and database never see plaintext — even the host owner opening the database finds only meaningless ciphertext.
+- **📧 Two-Factor Email Verification (2FA OTP)**
+  - After your master password is verified, a 6-digit one-time code is emailed to your configured address.
+  - The vault stays locked until the correct code is entered.
+- **📱 iOS PWA (Native App Feel)**
+  - "Share ➔ Add to Home Screen" in iOS Safari for full-screen, chrome-free, native-like usage.
+  - Apple glassmorphism design, smooth animations, iOS safe-area support.
+- **🌗 Dark & Light Mode** — one-tap theme switching from the top bar or settings.
+- **👤 Personal Avatar** — upload, change or remove your profile photo anytime.
+- **⚡ Fast Copy & Security** — one-tap copy for username/password, a strong password generator (length, letters, digits, symbols, strength meter), and auto-lock after 15 minutes of inactivity.
+- **💾 Encrypted Backup & Restore** — export/import all records as an encrypted JSON file.
 
 ---
 
-## 🛠️ Dosya Yapısı
+## 🧭 How It Works (Architecture)
+
+```mermaid
+flowchart TD
+    subgraph Client["🖥️ Browser (Client)"]
+        UI["index.php UI / PWA"]
+        MP["Master Password"]
+        KDF["crypto.js<br/>PBKDF2 → AES-256-GCM key"]
+        ENC["Encrypt / Decrypt<br/>(Web Crypto API)"]
+        SW["service-worker.js<br/>offline cache"]
+    end
+
+    subgraph Server["☁️ cPanel Server (PHP)"]
+        AUTH["api/auth.php<br/>setup · login · 2FA"]
+        VAULT["api/vault.php<br/>add / edit / delete"]
+        BACKUP["api/backup.php<br/>export / import"]
+        MAIL["config.php<br/>SMTP mail engine"]
+    end
+
+    subgraph Storage["🗄️ Storage"]
+        DB[("data/vault.db<br/>SQLite — ciphertext only")]
+    end
+
+    MP --> KDF --> ENC
+    UI --> ENC
+    ENC -->|"encrypted payload"| VAULT
+    VAULT --> DB
+    UI -->|"login request"| AUTH
+    AUTH -->|"send OTP"| MAIL
+    MAIL -->|"6-digit code"| Email["📧 User Email"]
+    UI <-->|"encrypted JSON"| BACKUP
+    UI -.->|"cache assets"| SW
+
+    classDef plain fill:#fee2e2,stroke:#ef4444,color:#111;
+    classDef cipher fill:#dcfce7,stroke:#22c55e,color:#111;
+    class MP,KDF plain;
+    class DB,VAULT cipher;
+```
+
+> 🔑 **The key insight:** the encryption key never leaves the browser. The server only ever stores and moves encrypted blobs (green), while the plaintext and master key (red) exist only on the client.
+
+---
+
+## 🔐 Login & Unlock Flow
+
+```mermaid
+sequenceDiagram
+    participant U as User
+    participant B as Browser
+    participant S as Server (auth.php)
+    participant M as SMTP / Email
+
+    U->>B: Enter master password
+    B->>B: Derive key (PBKDF2)
+    B->>S: Verify master password hash
+    alt Password correct
+        S->>M: Generate & send 6-digit OTP
+        M-->>U: 📧 OTP code
+        U->>B: Enter OTP
+        B->>S: Submit OTP
+        S-->>B: ✅ Verified
+        B->>B: Decrypt vault locally (AES-256-GCM)
+        B-->>U: 🔓 Vault unlocked
+    else Password wrong
+        S-->>B: ❌ Rejected
+    end
+    Note over B: Auto-locks after 15 min idle
+```
+
+---
+
+## 🚀 cPanel Setup (3 Easy Steps)
+
+Because the project uses SQLite, **you don't need to create a database or grant user privileges** in cPanel.
+
+1. **Upload the files**
+   - Zip all files in this project folder.
+   - Log into cPanel and open the **File Manager**.
+   - Go to `public_html` (or a subdomain folder such as `passwords.yourdomain.com`), upload the zip and **Extract** it.
+2. **Check permissions**
+   - Make sure the `data/` folder is writable (`755` or `777`) — the SQLite database is created there automatically.
+   - `data/.htaccess` automatically blocks the database from being downloaded from outside.
+3. **Initialize the vault**
+   - Visit your site (e.g. `https://passwords.yourdomain.com`).
+   - On the first screen, set a strong **Master Password** and initialize your vault!
+
+*(Optional: to use MySQL, set `DB_TYPE` to `'mysql'` in `config.php` and fill in your database credentials.)*
+
+---
+
+## 📲 Using It As A Mobile App On iOS
+
+1. Open **Safari** on your iPhone or iPad and visit your site.
+2. Tap the **Share** icon at the bottom (the square with an upward arrow).
+3. Scroll down and choose **"Add to Home Screen"**.
+4. Tap **"Add"** in the top right.
+5. It now runs as a standalone mobile app with its own SafeBadger icon on your home screen!
+
+---
+
+## 🛠️ Project Structure
 
 ```
-├── index.php                 # Ana uygulama ve PWA arayüzü
-├── config.php                # Veritabanı ve güvenlik yapılandırması
-├── manifest.webmanifest      # PWA Manifest (iOS / Android)
-├── service-worker.js         # Çevrimdışı önbellek ve servis çalışanı
-├── .htaccess                 # Apache / cPanel güvenlik ve sıkıştırma kuralları
+├── index.php                 # Main application & PWA interface
+├── config.php                # Database & security configuration + mail engine
+├── manifest.webmanifest      # PWA manifest (iOS / Android)
+├── service-worker.js         # Offline cache & service worker
+├── .htaccess                 # Apache / cPanel security & compression rules
 ├── api/
-│   ├── auth.php              # Durum, kurulum ve kimlik doğrulama API'si
-│   ├── vault.php             # Şifreli kayıt ekleme/düzenleme/silme API'si
-│   └── backup.php            # Şifreli JSON dışa ve içe aktarma
+│   ├── auth.php              # Status, setup, authentication & 2FA API
+│   ├── vault.php             # Encrypted add/edit/delete records API
+│   └── backup.php            # Encrypted JSON export & import
 ├── data/
-│   ├── .htaccess             # Veritabanı koruma kuralı
-│   └── vault.db              # SQLite veritabanı (otomatik oluşur)
+│   ├── .htaccess             # Database protection rule
+│   └── vault.db              # SQLite database (auto-created, git-ignored)
 └── assets/
-    ├── css/style.css         # Apple Glassmorphic Dark & Light CSS
+    ├── css/style.css         # Apple glassmorphic dark & light CSS
     ├── js/
-    │   ├── crypto.js         # PBKDF2 & AES-256-GCM istemci şifreleme motoru
-    │   ├── app.js            # Kasa yönetimi, tema ve profil fotoğrafı
-    │   └── pwa.js            # iOS ana ekrana ekleme rehberi
-    └── icons/                # iOS ve PWA yüksek çözünürlüklü ikonları
+    │   ├── crypto.js         # PBKDF2 & AES-256-GCM client encryption engine
+    │   ├── app.js            # Vault management, theme & avatar
+    │   └── pwa.js            # iOS add-to-home-screen helper
+    └── icons/                # iOS & PWA high-resolution icons
 ```
 
 ---
 
-## ⚙️ Yapılandırma & Güvenlik Notları
+## ⚙️ Configuration & Security Notes
 
-- **SMTP parolası:** Depoda `config.php` içindeki `SMTP_PASS` değeri güvenlik gereği `YOUR_SMTP_PASSWORD` placeholder'ı ile bırakılmıştır. Canlıya alırken kendi cPanel e-posta hesabınızın parolasını buraya yazın.
-- **E-posta adresi:** 2FA kodları ve şifre sıfırlama bağlantıları `config.php` içindeki `AUTH_EMAIL` adresine gönderilir; kendi adresinizle değiştirin.
-- **Hassas dosyalar depoya dahil değildir:** `data/vault.db` (kasa veritabanı), tek kullanımlık OTP ve şifre sıfırlama log dosyaları `.gitignore` ile hariç tutulmuştur. Veritabanı ilk çalıştırmada otomatik oluşur.
-- **Ana Parola:** Kasanızın tek anahtarı belirlediğiniz ana paroladır. Zero-Knowledge mimarisi gereği **unutulan ana parola sıfırlanamaz veya kurtarılamaz** — güçlü ve hatırlanabilir bir parola seçin.
+- **SMTP password:** In the repo, `SMTP_PASS` in `config.php` is intentionally left as the `YOUR_SMTP_PASSWORD` placeholder. Set your own cPanel email account password before going live.
+- **Email address:** 2FA codes and password-reset links are sent to the `AUTH_EMAIL` address in `config.php` — replace it with your own.
+- **Sensitive files are not committed:** `data/vault.db` (the vault database), one-time OTP and password-reset log files are excluded via `.gitignore`. The database is created automatically on first run.
+- **Master Password:** It is the only key to your vault. By design, a **forgotten master password cannot be reset or recovered** — choose one that is both strong and memorable.
 
 ---
 
-## 📄 Lisans
+## 📄 License
 
-Kişisel kullanım için geliştirilmiştir. Dilediğiniz gibi kullanabilir ve özelleştirebilirsiniz.
+Built for personal use. Feel free to use and customize it as you wish.
